@@ -20,8 +20,8 @@ func __sum(data []float64) (sum float64) {
 }
 
 type Word struct {
-	min, max, middle  float64
-	kLeft, kRight, cM float64
+	Min, Max, Middle  float64
+	KLeft, KRight, cM float64
 	t                 int // WordType
 }
 
