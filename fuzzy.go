@@ -22,16 +22,16 @@ func __sum(data []float64) (sum float64) {
 type Word struct {
 	Min, Max, Middle  float64
 	KLeft, KRight, cM float64
-	t                 int // WordType
+	T                 int // WordType
 }
 
 func (w *Word) Mu(value float64) (r float64, err error) {
-	if value < w.Min && w.t != TrapezeLeft ||
-		value > w.Max && w.t != TrapezeRight {
+	if value < w.Min && w.T != TrapezeLeft ||
+		value > w.Max && w.T != TrapezeRight {
 		return
 	}
 
-	switch w.t {
+	switch w.T {
 	case TrapezeLeft:
 		if value < w.Middle {
 			r = 1.0
@@ -83,12 +83,12 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 			KRight: 0.0,
 			Middle: _middle,
 			cM:     _middle,
-			t:      Triangle,
+			T:      Triangle,
 		}
 	}
 
-	words[0].t = TrapezeLeft
-	words[wordsCount-1].t = TrapezeRight
+	words[0].T = TrapezeLeft
+	words[wordsCount-1].T = TrapezeRight
 
 	for i := 0; i < wordsCount; i++ {
 		if i > 0 {
