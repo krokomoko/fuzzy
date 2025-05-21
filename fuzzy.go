@@ -26,29 +26,29 @@ type Word struct {
 }
 
 func (w *Word) Mu(value float64) (r float64, err error) {
-	if value < w.min && w.t != TrapezeLeft ||
-		value > w.max && w.t != TrapezeRight {
+	if value < w.Min && w.t != TrapezeLeft ||
+		value > w.Max && w.t != TrapezeRight {
 		return
 	}
 
 	switch w.t {
 	case TrapezeLeft:
-		if value < w.middle {
+		if value < w.Middle {
 			r = 1.0
 		} else {
-			r = 1.0 + w.kRight*(value-w.middle)
+			r = 1.0 + w.KRight*(value-w.Middle)
 		}
 	case TrapezeRight:
-		if value >= w.middle {
+		if value >= w.Middle {
 			r = 1.0
 		} else {
-			r = w.kLeft * (value - w.min)
+			r = w.KLeft * (value - w.Min)
 		}
 	case Triangle:
-		if value < w.middle {
-			r = w.kLeft * (value - w.min)
-		} else if value > w.middle {
-			r = 1.0 + w.kRight*(value-w.middle)
+		if value < w.Middle {
+			r = w.KLeft * (value - w.Min)
+		} else if value > w.Middle {
+			r = 1.0 + w.KRight*(value-w.Middle)
 		} else {
 			r = 1.0
 		}
@@ -77,11 +77,11 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 		_min = min + float64(wordInd)*vPerWord
 		_middle = _min + vPerWord2
 		words[wordInd] = Word{
-			min:    _min,
-			max:    _min + vPerWord,
-			kLeft:  0.0,
-			kRight: 0.0,
-			middle: _middle,
+			Min:    _min,
+			Max:    _min + vPerWord,
+			KLeft:  0.0,
+			KRight: 0.0,
+			Middle: _middle,
 			cM:     _middle,
 			t:      Triangle,
 		}
@@ -92,23 +92,23 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 
 	for i := 0; i < wordsCount; i++ {
 		if i > 0 {
-			words[i].min = words[i-1].middle
-			words[i].kLeft = 1.0 / (words[i].middle - words[i].min)
+			words[i].Min = words[i-1].Middle
+			words[i].KLeft = 1.0 / (words[i].Middle - words[i].Min)
 		}
 		if i < wordsCount-1 {
-			words[i].max = words[i+1].middle
-			words[i].kRight = -1.0 / (words[i].max - words[i].middle)
+			words[i].Max = words[i+1].Middle
+			words[i].KRight = -1.0 / (words[i].Max - words[i].Middle)
 		}
 	}
 
-	a := words[0].middle - words[0].min
-	b := words[0].max - words[0].min
-	words[0].cM = (b*words[0].min + a*words[0].max) / (a + b)
+	a := words[0].Middle - words[0].Min
+	b := words[0].Max - words[0].Min
+	words[0].cM = (b*words[0].Min + a*words[0].Max) / (a + b)
 
 	lastWordInd := wordsCount - 1
-	a = words[lastWordInd].max - words[lastWordInd].middle
-	b = words[lastWordInd].max - words[lastWordInd].min
-	words[lastWordInd].cM = (b*words[lastWordInd].max + a*words[lastWordInd].min) / (a + b)
+	a = words[lastWordInd].Max - words[lastWordInd].Middle
+	b = words[lastWordInd].Max - words[lastWordInd].Min
+	words[lastWordInd].cM = (b*words[lastWordInd].Max + a*words[lastWordInd].Min) / (a + b)
 
 	return Parameter{
 		Words: words,
