@@ -21,7 +21,7 @@ func __sum(data []float64) (sum float64) {
 
 type Word struct {
 	Min, Max, Middle  float64
-	KLeft, KRight, cM float64
+	KLeft, KRight, Cm float64
 	T                 int // WordType
 }
 
@@ -82,7 +82,7 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 			KLeft:  0.0,
 			KRight: 0.0,
 			Middle: _middle,
-			cM:     _middle,
+			Cm:     _middle,
 			T:      Triangle,
 		}
 	}
@@ -103,12 +103,12 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 
 	a := words[0].Middle - words[0].Min
 	b := words[0].Max - words[0].Min
-	words[0].cM = (b*words[0].Min + a*words[0].Max) / (a + b)
+	words[0].Cm = (b*words[0].Min + a*words[0].Max) / (a + b)
 
 	lastWordInd := wordsCount - 1
 	a = words[lastWordInd].Max - words[lastWordInd].Middle
 	b = words[lastWordInd].Max - words[lastWordInd].Min
-	words[lastWordInd].cM = (b*words[lastWordInd].Max + a*words[lastWordInd].Min) / (a + b)
+	words[lastWordInd].Cm = (b*words[lastWordInd].Max + a*words[lastWordInd].Min) / (a + b)
 
 	return Parameter{
 		Words: words,
@@ -117,7 +117,7 @@ func NewParameter(data []float64, wordsCount int) Parameter {
 
 func (p *Parameter) Value(data []float64) (r float64, err error) {
 	for i, v := range data {
-		r += p.Words[i].cM * v
+		r += p.Words[i].Cm * v
 	}
 
 	sum := __sum(data)
